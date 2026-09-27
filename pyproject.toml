@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gm-x402-tools"
+version = "0.1.0"
+description = "Pay-per-call tools for AI agents (LangChain, CrewAI, plain Python): crypto safety checks on Base, a web/PDF reader and a cheapest-API finder. Free daily allowance; pay beyond it with x402 (USDC on Base)."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "gmahar82-stack" }]
+dependencies = ["requests>=2.31", "pydantic>=2", "x402[requests,evm]>=2.20"]
+keywords = ["x402", "ai-agents", "langchain", "crewai", "crypto", "base", "honeypot", "address-poisoning", "web-reader", "usdc"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.optional-dependencies]
+langchain = ["langchain-core>=0.3"]
+crewai = ["crewai>=0.100"]
+dev = ["pytest", "langchain-core>=0.3"]
+
+[project.urls]
+"Trust Check" = "https://trust-check.gm-tools.workers.dev/llms.txt"
+"Easy Reader AI" = "https://agent-reader.gm-tools.workers.dev/llms.txt"
+"Agent Deals" = "https://agent-deals.gm-tools.workers.dev/llms.txt"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gm_x402_tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
