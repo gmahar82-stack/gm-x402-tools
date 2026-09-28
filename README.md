@@ -1,6 +1,6 @@
 # gm-x402-tools
 
-Six ready-made tools for AI agents, for **LangChain**, **CrewAI** or plain Python:
+Seven ready-made tools for AI agents, for **LangChain**, **CrewAI** or plain Python:
 
 | Tool | What it does | Price |
 |---|---|---|
@@ -9,6 +9,7 @@ Six ready-made tools for AI agents, for **LangChain**, **CrewAI** or plain Pytho
 | `read_web_page` | Any public web page or PDF as clean Markdown, with title, author, date and links | $0.003 |
 | `get_page_metadata` | A page's title, description, author, date, image and JSON-LD | $0.002 |
 | `find_cheapest_api` | The cheapest **working** paid API for a task, ranked by live price, uptime and speed | $0.002 |
+| `check_payment_safety` | **Pay Safe**: before paying any x402 API, GO / CAUTION / STOP. Is it working, is the price fair, is the wallet safe and the one it normally uses? | **Free** |
 | `check_paid_api` | Before paying an API: is it up, is the price right, is there a cheaper one? | **Free** |
 
 - **Free to start:** every service includes a free daily allowance (3–20 calls a day), requested automatically.
@@ -49,6 +50,7 @@ gm = GMTools()
 print(gm.check_token("0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed")["verdict"])
 print(gm.check_address("0x...destination", from_address="0x...your wallet")["summary"])
 print(gm.read_page("https://example.com")["markdown"])
+print(gm.preflight_payment("https://api.example.com/data", price_usd=0.01, pay_to="0x...")["verdict"])  # go / caution / stop
 ```
 
 ## Paying beyond the free allowance

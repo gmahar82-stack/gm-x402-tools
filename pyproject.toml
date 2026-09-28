@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gm-x402-tools"
-version = "0.1.0"
+version = "0.2.0"
 description = "Pay-per-call tools for AI agents (LangChain, CrewAI, plain Python): crypto safety checks on Base, a web/PDF reader and a cheapest-API finder. Free daily allowance; pay beyond it with x402 (USDC on Base)."
 readme = "README.md"
 license = "MIT"

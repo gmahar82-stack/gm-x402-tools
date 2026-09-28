@@ -58,10 +58,13 @@ def test_errors_become_text_for_the_llm(monkeypatch):
     assert out.startswith("Error (not charged)")
 
 
-def test_six_tools_with_schemas(monkeypatch):
+def test_seven_tools_with_schemas(monkeypatch):
     client, _ = make(monkeypatch, 200, {})
     names = [s.name for s in specs(client)]
-    assert names == ["check_token_safety", "check_address_safety", "read_web_page", "get_page_metadata", "find_cheapest_api", "check_paid_api"]
+    assert names == [
+        "check_token_safety", "check_address_safety", "read_web_page", "get_page_metadata",
+        "find_cheapest_api", "check_payment_safety", "check_paid_api",
+    ]
 
 
 def test_langchain_tools(monkeypatch):
@@ -73,3 +76,12 @@ def test_langchain_tools(monkeypatch):
     meta = next(t for t in tools if t.name == "get_page_metadata")
     assert "Example Domain" in meta.invoke({"url": "https://example.com"})
     assert calls[-1][1] == {"url": "https://example.com"}
+
+
+def test_preflight_payment_calls_pay_safe(monkeypatch):
+    client, calls = make(monkeypatch, 200, {"verdict": "stop", "summary": "Don't pay."})
+    spec = next(s for s in specs(client) if s.name == "check_payment_safety")
+    out = json.loads(as_text(spec.run, url="https://api.example.com/x", price_usd=0.01, pay_to="0xdead"))
+    assert out["verdict"] == "stop"
+    assert calls[0][0].endswith("/v1/preflight")
+    assert calls[0][1] == {"url": "https://api.example.com/x", "price_usd": 0.01, "pay_to": "0xdead", "method": "GET"}

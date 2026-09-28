@@ -34,6 +34,13 @@ class DealArgs(BaseModel):
     max_price_usd: float | None = Field(default=None, description="Optional: ignore services above this price per call")
 
 
+class PreflightArgs(BaseModel):
+    url: str = Field(description="URL of the paid (x402) API you are about to pay")
+    price_usd: float | None = Field(default=None, description="The price it asks, from its 402 Payment Required answer")
+    pay_to: str | None = Field(default=None, description="The wallet it asks you to pay (payTo in its 402 answer)")
+    max_price_usd: float | None = Field(default=None, description="Optional: answer STOP if the price is above this")
+
+
 class CheckServiceArgs(BaseModel):
     url: str = Field(description="URL of the paid (x402) API you are about to pay")
     method: str = Field(default="GET", description="HTTP method the API uses")
@@ -80,6 +87,15 @@ def specs(client: GMTools) -> list[Spec]:
             "Find the cheapest WORKING paid (x402) API for a task, ranked by live price, uptime and speed, with example inputs.",
             DealArgs,
             lambda task, max_price_usd=None: client.cheapest_service(task, max_price_usd),
+        ),
+        Spec(
+            "check_payment_safety",
+            "FREE. Before paying any x402 API, get GO / CAUTION / STOP: is it working, is the price fair (vs its listing, "
+            "what it charged before and similar services), and is the wallet it asks you to pay safe and the one it normally uses?",
+            PreflightArgs,
+            lambda url, price_usd=None, pay_to=None, max_price_usd=None: client.preflight_payment(
+                url, price_usd, pay_to, max_price_usd=max_price_usd
+            ),
         ),
         Spec(
             "check_paid_api",

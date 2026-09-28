@@ -121,6 +121,22 @@ class GMTools:
         """The cheapest WORKING paid (x402) APIs for a task, ranked by live price, uptime and speed."""
         return self._get(f"{AGENT_DEALS}/v1/best", {"task": task, "max_price_usd": max_price_usd, "limit": limit})
 
+    def preflight_payment(
+        self,
+        url: str,
+        price_usd: float | None = None,
+        pay_to: str | None = None,
+        method: str = "GET",
+        max_price_usd: float | None = None,
+    ) -> dict[str, Any]:
+        """FREE Pay Safe check before paying any x402 API: GO / CAUTION / STOP. Is the service working, is the
+        price fair (vs its listing, what it charged before, similar services), is the wallet safe and the one
+        it normally uses?"""
+        return self._get(
+            f"{AGENT_DEALS}/v1/preflight",
+            {"url": url, "price_usd": price_usd, "pay_to": pay_to, "method": method, "max_price_usd": max_price_usd},
+        )
+
     def check_service(self, url: str, method: str = "GET") -> dict[str, Any]:
         """FREE: before paying an x402 API, check it is up, its price matches its listing, and cheaper options."""
         return self._get(f"{AGENT_DEALS}/v1/check", {"url": url, "method": method})
